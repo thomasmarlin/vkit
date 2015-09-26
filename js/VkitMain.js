@@ -7,6 +7,15 @@ angular.module('vkit-app').controller('VkitMain', ['$scope',  function($scope) {
 
     console.log(JSON.stringify(allCardNames));
 
+    var MARGIN_LEFT = 0.35;
+    var MARGIN_TOP = 0.35;
+
+    var MAX_PAGE_BOTTOM = 11.0 - MARGIN_LEFT;
+    var MAX_PAGE_RIGHT = 8.5 - MARGIN_TOP;
+
+    var CARD_WIDTH = 2.5;
+
+
     $scope.vkitModel = {
       filterText: ""
     };
@@ -85,7 +94,8 @@ angular.module('vkit-app').controller('VkitMain', ['$scope',  function($scope) {
 
           context.drawImage(img, 0, 0);
           var dataURL = canvas.toDataURL('image/jpeg');
-          callback(dataURL, canvas.height / canvas.width);
+          var aspectRatio = canvas.height / canvas.width;
+          callback(dataURL, aspectRatio);
           canvas = null;
         };
         img.onerror = function() {
@@ -95,36 +105,115 @@ angular.module('vkit-app').controller('VkitMain', ['$scope',  function($scope) {
 
     }
 
+    function sortCards(originalList, fullTemplates, halfSlips){
+        for (var i = 0; i < originalList.length; i++) {
+            var card = originalList[i];
+            if (card.aspectRatio > 1) {
+                // Card is taller than wide
+                fullTemplates.push(card);
+            } else {
+                halfSlips.push(card);
+            }
+        }
+    }
+
+    function setPrintPoint(pointObj, top, left, bottom, right) {
+        pointObj.top = top;
+        pointObj.left = left;
+        pointObj.bottom = bottom;
+        pointObj.right = right;
+    }
+
+    function printCards(doc, cardsToPrint, lastPrintPoint) {
+
+        for (var i = 0; i < cardsToPrint.length; i++) {
+            var card = cardsToPrint[i];
+
+            var calculatedHeight = CARD_WIDTH * card.aspectRatio;
+            console.log("calculatedHeight: " + calculatedHeight);
+
+            var nextTop = lastPrintPoint.top;
+            var nextLeft = lastPrintPoint.right;
+            var addedPageOrRow = false;
+
+            // If this card exceeds the bottom, add a new page
+            if ((nextTop + calculatedHeight) > MAX_PAGE_BOTTOM) {
+                // Won't fit on page!  Add a new page!
+                console.log("Next bottom would have been off-page. Figuring out to adapt!");
+                doc.addPage();
+                addedPageOrRow = true;
+                nextTop = MARGIN_TOP;
+                nextLeft = MARGIN_LEFT;
+            }
+
+            // If this card will exceed the width, add a new row OR a new page if needed
+            if ((nextLeft + CARD_WIDTH) > MAX_PAGE_RIGHT) {
+                console.log("Next right edge would have been off screen. Figuring out how to adapt!");
+                nextTop = lastPrintPoint.bottom;
+
+                // Need to add a new row
+                if ((nextTop + calculatedHeight) < MAX_PAGE_BOTTOM) {
+                    // Card will fit in the page in the next rows
+                    console.log("Adding new row!");
+                    nextTop = lastPrintPoint.bottom;
+                    nextLeft = MARGIN_LEFT;
+                    addedPageOrRow = true;
+                } else {
+                    // Need a whole new page
+                    console.log("Adding new page!");
+                    doc.addPage()
+                    nextTop = MARGIN_TOP;
+                    nextLeft = MARGIN_LEFT;
+                }
+            } else {
+                // Card will fit in this row on this page!  No adjustments needed.
+            }
+
+            if (card.dataUrl != null){
+                doc.addImage(card.dataUrl, 'jpeg', nextLeft, nextTop, CARD_WIDTH, calculatedHeight);
+            }
+
+            // 'bottom' of last card can't be any higher than the lowest card in the current row
+            var bottomOfLastPrintedCard = nextTop + calculatedHeight;
+            if (!addedPageOrRow) {
+                bottomOfLastPrintedCard = Math.max(bottomOfLastPrintedCard, lastPrintPoint.bottom);
+            }
+            // Adjust the print-point based on the card we just added
+            setPrintPoint(lastPrintPoint, nextTop, nextLeft,
+                                          bottomOfLastPrintedCard, nextLeft + CARD_WIDTH);
+
+        }
+
+    }
+
+
     $scope.generatePdf = function() {
         var doc = new jsPDF('portrait', 'in', 'a4');
 
-        var leftMargin = 0.35;
-        var topMargin = 0.35;
-
-        var cardHeight = 3.5;
-        var cardWidth = 2.5;
-
-        var cardsInCurrentRow = 0;
-        var rowsPrinted = 0;
+        var cardsWithSizes = [];
 
         function addNextCard(currentCardIndex) {
             if (currentCardIndex == $scope.cardsForPdf.length) {
-                doc.output('save', 'vkitPdf.pdf');
-            } else {
 
-              cardsInCurrentRow++;
-              if (cardsInCurrentRow > 3) {
-                  cardsInCurrentRow = 1;
-                  rowsPrinted++;
+              var halfSlips = [];
+              var fullTemplates = [];
+              sortCards(cardsWithSizes, fullTemplates, halfSlips);
 
-                  if (rowsPrinted > 2) {
-                      rowsPrinted = 0;
-                      doc.addPage();
-                  }
+              var cardsInCurrentRow = 0;
+              var rowsPrinted = 0;
+
+              var lastPrintPoint = {
+                  left: MARGIN_LEFT,
+                  top: MARGIN_TOP,
+                  right: MARGIN_LEFT,
+                  bottom: MARGIN_TOP
               }
+              printCards(doc, fullTemplates, lastPrintPoint);
+              printCards(doc, halfSlips, lastPrintPoint);
 
-              var left = leftMargin + cardWidth * (cardsInCurrentRow - 1);
-              var top = topMargin + cardHeight * (rowsPrinted);
+              doc.output('save', 'vkitPdf.pdf');
+
+            } else {
 
               var cardName = $scope.cardsForPdf[currentCardIndex];
               var cardPath = allCardImages[cardName];
@@ -132,13 +221,11 @@ angular.module('vkit-app').controller('VkitMain', ['$scope',  function($scope) {
 
               var imgData = convertImgToBase64(cardPath, function(dataUrl, aspectRatio){
 
-                  var calculatedHeight = cardWidth * aspectRatio;
-                  if (dataUrl != null){
-                    doc.addImage(dataUrl, 'jpeg', left, top, cardWidth, calculatedHeight);
-                  }
-
-                  //$scope.printedCards.push(dataUrl);
-                  //$scope.$apply();
+                  cardsWithSizes.push( {
+                    cardPath: cardPath,
+                    dataUrl: dataUrl,
+                    aspectRatio: aspectRatio
+                  })
 
                   addNextCard(currentCardIndex+1);
               });

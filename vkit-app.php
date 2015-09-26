@@ -31,7 +31,14 @@ function initVkit(){
   echo '<script src="' . plugins_url('/vkit-app/js/VkitMain.js') . '"></script>' . "\n";
 
 
-  $cardsPath = 'wp-content/plugins/vkit-app/cards/standard';
+  // For SWCCGPC:
+  $extraPrefix = "wp/";
+
+  // For Local testing:
+  //$extraPrefix = "";
+
+
+  $cardsPath = '/wp-content/plugins/vkit-app/cards/standard';
   $dir_f = ABSPATH . $cardsPath;
   //echo $dir_f;
   $files = scandir($dir_f);
@@ -44,7 +51,7 @@ function initVkit(){
   foreach ($files as $value) {
     if ($value != '.' && $value != '..') {
       echo "allCardNames.push('" . $value . "');";
-      echo "allCardImages['" . $value . "'] = '../" . $cardsPath . "/" . $value . "/image.png';";
+      echo "allCardImages['" . $value . "'] = '../" . $extraPrefix . $cardsPath . "/" . $value . "/image.png';";
     }
   }
 
