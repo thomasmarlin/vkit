@@ -29,6 +29,7 @@ function initVkit(){
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">';
 
   echo '<script src="' . plugins_url('/vkit-app/js/VkitMain.js') . '"></script>' . "\n";
+  echo '<script src="' . plugins_url('/vkit-app/js/whiteBorderizer.js') . '"></script>' . "\n";
 
 
   // For SWCCGPC:
@@ -52,6 +53,7 @@ function initVkit(){
     if ($value != '.' && $value != '..') {
       echo "allCardNames.push('" . $value . "');";
       echo "allCardImages['" . $value . "'] = '../" . $extraPrefix . $cardsPath . "/" . $value . "/image.png';";
+      echo "allCardImages['" . $value . " (WB)'] = '../" . $extraPrefix . $cardsPath . "/" . $value . "/image.png';";
     }
   }
 

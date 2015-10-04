@@ -23,7 +23,6 @@ angular.module('vkit-app').controller('VkitMain', ['$scope',  function($scope) {
     $scope.cardsForPdf = [];
     $scope.printedCards = [];
 
-
     function updateMatchingCards() {
         console.log("Filter Change!: " + $scope.vkitModel.filterText);
 
@@ -51,10 +50,15 @@ angular.module('vkit-app').controller('VkitMain', ['$scope',  function($scope) {
         updateMatchingCards();
     }
 
-    $scope.addSelectedCards = function() {
+    $scope.addSelectedCards = function(isWhiteBorder) {
         // Try to add the cards next to it's duplicates (if exist)
         for (var i = 0; i < $scope.vkitModel.selectedAdds.length; i++) {
             var cardToAdd = $scope.vkitModel.selectedAdds[i];
+
+            if (isWhiteBorder) {
+                cardToAdd += " (WB)";
+            }
+
             var added = false;
             for (var j = 0; j < $scope.cardsForPdf.length; j++) {
                 if ($scope.cardsForPdf[j] == cardToAdd) {
@@ -81,7 +85,7 @@ angular.module('vkit-app').controller('VkitMain', ['$scope',  function($scope) {
         }
     }
 
-    function convertImgToBase64(url, callback)
+    function convertImgToBase64(isWhiteBorder, url, callback)
     {
         var canvas = document.createElement('canvas');
         var ctx = canvas.getContext('2d');
@@ -93,6 +97,11 @@ angular.module('vkit-app').controller('VkitMain', ['$scope',  function($scope) {
           var context = canvas.getContext('2d');
 
           context.drawImage(img, 0, 0);
+
+          if (isWhiteBorder) {
+              convertCanvasToWhiteBorder2(canvas);
+          }
+
           var dataURL = canvas.toDataURL('image/jpeg');
           var aspectRatio = canvas.height / canvas.width;
           callback(dataURL, aspectRatio);
@@ -216,10 +225,11 @@ angular.module('vkit-app').controller('VkitMain', ['$scope',  function($scope) {
             } else {
 
               var cardName = $scope.cardsForPdf[currentCardIndex];
+              var isWhiteBorder = (-1 != cardName.indexOf(" (WB)"));
               var cardPath = allCardImages[cardName];
               console.log("image: " + cardPath );
 
-              var imgData = convertImgToBase64(cardPath, function(dataUrl, aspectRatio){
+              var imgData = convertImgToBase64(isWhiteBorder, cardPath, function(dataUrl, aspectRatio){
 
                   cardsWithSizes.push( {
                     cardPath: cardPath,
