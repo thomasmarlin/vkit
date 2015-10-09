@@ -18,16 +18,23 @@
 
 -->
 
-<div style="margin:20px;width:100%;height:100%">
+<div>
 
-    <h2 style="float:left">Welcome to the new VKit!</h2>
-    <h4 style="float:right; text-decoration:underline; font-style:italic" data-toggle="collapse" data-target="#instructionsObj"> + Click For Instructions </h4>
+    <h2 style="float:left; font-weight:bold; font-size:22px">Welcome to the new VKit!</h2>
+
+    <!-- Instructions on the right side -->
+    <div class='row' style="width:100%">
+      <div class="col-md-5" style="float:right">
+        <h4 style="float:right; text-decoration:underline; font-style:italic" data-ng-click="expandCollapseInstructions()"> + Click For Instructions </h4>
+        <div style="clear:both"></div>
+      </div>
+    </div>
 
     <div style="clear:both"></div>
 
     <!-- Instructions (collapsble per above) -->
-    <div class="collapse" id="instructionsObj" style="border:thin solid #DADADA;margin:20px; position:relative">
-        <div style="position:absolute; top: 10px; right: 10px;" data-toggle="collapse" data-target="#instructionsObj">[Hide]</div>
+    <div id="instructionsObj" style="border:thin solid #DADADA;margin:20px; position:relative; display:none">
+        <div style="position:absolute; top: 10px; right: 10px;"  data-ng-click="expandCollapseInstructions()">[Hide]</div>
         <div style="margin:20px">
             <div> - The cards on the left are all of the cards available. </div>
             <div> - The cards on the right are all of the cards you have selected to print. </div>
@@ -60,12 +67,12 @@
 
         <!-- Middle Pane:  Add/Remove buttons -->
         <div class='col-md-2'>
-            <div style="margin:20px">
-                <button class='btn btn-info' style="width:100%" ng-click='addSelectedCards(false)'>Add (BB)>></button>
+            <div>
+                <button class='btn btn-info btn-block' ng-click='addSelectedCards(false)'>Add (BB)>></button>
                 <div style="height:10px"></div>
-                <button class='btn btn-info' style="width:100%" ng-click='addSelectedCards(true)'>Add (WB)>></button>
+                <button class='btn btn-info btn-block' ng-click='addSelectedCards(true)'>Add (WB)>></button>
                 <div style="height:10px"></div>
-                <button class='btn btn-danger' style="width:100%" ng-click='removeSelectedCards()'> &lt;&lt; Remove</button>
+                <button class='btn btn-danger btn-block' ng-click='removeSelectedCards()'> &lt;&lt; Remove</button>
             </div>
         </div>
 

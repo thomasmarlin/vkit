@@ -23,6 +23,16 @@ angular.module('vkit-app').controller('VkitMain', ['$scope',  function($scope) {
     $scope.cardsForPdf = [];
     $scope.printedCards = [];
 
+
+    $scope.expandCollapseInstructions = function() {
+        var displayMode = jQuery('#instructionsObj').css('display');
+        if (displayMode == "none") {
+            jQuery('#instructionsObj').css('display', 'block');
+        } else {
+            jQuery('#instructionsObj').css('display', 'none');
+        }
+    }
+
     function updateMatchingCards() {
         console.log("Filter Change!: " + $scope.vkitModel.filterText);
 
@@ -43,7 +53,7 @@ angular.module('vkit-app').controller('VkitMain', ['$scope',  function($scope) {
             }
         }
 
-        console.log("Match size: " + $scope.matchingCards.length)
+        //console.log("Match size: " + $scope.matchingCards.length)
     }
 
     $scope.filterChanged = function() {
@@ -139,7 +149,7 @@ angular.module('vkit-app').controller('VkitMain', ['$scope',  function($scope) {
             var card = cardsToPrint[i];
 
             var calculatedHeight = CARD_WIDTH * card.aspectRatio;
-            console.log("calculatedHeight: " + calculatedHeight);
+            //console.log("calculatedHeight: " + calculatedHeight);
 
             var nextTop = lastPrintPoint.top;
             var nextLeft = lastPrintPoint.right;
@@ -148,7 +158,7 @@ angular.module('vkit-app').controller('VkitMain', ['$scope',  function($scope) {
             // If this card exceeds the bottom, add a new page
             if ((nextTop + calculatedHeight) > MAX_PAGE_BOTTOM) {
                 // Won't fit on page!  Add a new page!
-                console.log("Next bottom would have been off-page. Figuring out to adapt!");
+                //console.log("Next bottom would have been off-page. Figuring out to adapt!");
                 doc.addPage();
                 addedPageOrRow = true;
                 nextTop = MARGIN_TOP;
@@ -157,19 +167,19 @@ angular.module('vkit-app').controller('VkitMain', ['$scope',  function($scope) {
 
             // If this card will exceed the width, add a new row OR a new page if needed
             if ((nextLeft + CARD_WIDTH) > MAX_PAGE_RIGHT) {
-                console.log("Next right edge would have been off screen. Figuring out how to adapt!");
+                //console.log("Next right edge would have been off screen. Figuring out how to adapt!");
                 nextTop = lastPrintPoint.bottom;
 
                 // Need to add a new row
                 if ((nextTop + calculatedHeight) < MAX_PAGE_BOTTOM) {
                     // Card will fit in the page in the next rows
-                    console.log("Adding new row!");
+                    //console.log("Adding new row!");
                     nextTop = lastPrintPoint.bottom;
                     nextLeft = MARGIN_LEFT;
                     addedPageOrRow = true;
                 } else {
                     // Need a whole new page
-                    console.log("Adding new page!");
+                    //console.log("Adding new page!");
                     doc.addPage()
                     nextTop = MARGIN_TOP;
                     nextLeft = MARGIN_LEFT;
@@ -246,5 +256,8 @@ angular.module('vkit-app').controller('VkitMain', ['$scope',  function($scope) {
     }
 
     updateMatchingCards();
+
+    // Remove the default wordpress entry-header on swccgpc
+    jQuery('.entry-header').css('display', 'none');
 
 }]);
