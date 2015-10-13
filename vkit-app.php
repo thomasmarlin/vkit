@@ -17,6 +17,8 @@ function test_plugin_setup_menu(){
 
 function initVkit(){
 
+
+  /*
   echo '<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.28/angular.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.28/angular-route.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.28/angular-animate.js"></script>
@@ -26,6 +28,12 @@ function initVkit(){
   <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.12.0/ui-bootstrap-tpls.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/jspdf/1.1.135/jspdf.min.js"></script>
 
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">';
+  */
+
+  echo '<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.28/angular.js"></script>
+  <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jspdf/1.1.135/jspdf.min.js"></script>
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">';
 
   echo '<script src="' . plugins_url('/vkit-app/js/VkitMain.js') . '"></script>' . "\n";
