@@ -73,7 +73,7 @@ function filterChanged() {
 function addSelectedCards(isWhiteBorder) {
 
   // Try to add the cards next to it's duplicates (if exist)
-  $("#selectAdds").find(":selected").each(function() {
+  jQuery("#selectAdds").find(":selected").each(function() {
       var cardToAdd = jQuery(this).val()
 
       if (isWhiteBorder) {
@@ -107,7 +107,7 @@ function addSelectedCards(isWhiteBorder) {
 }
 
 function removeSelectedCards() {
-    $("#selectedRemoves").find(":selected").each(function() {
+    jQuery("#selectedRemoves").find(":selected").each(function() {
         var cardToRemove = jQuery(this).val();
         for (var j = 0; j < cardsForPdf.length; j++) {
             if (cardsForPdf[j] == cardToRemove) {
