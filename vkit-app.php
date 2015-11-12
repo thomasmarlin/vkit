@@ -5,6 +5,12 @@ Description: SWCCG VKit
 Author: Tom Marlin
 Version: 1.0
 */
+
+/* Force pages to reload every time */
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
+
 //add_action('admin_menu', 'test_plugin_setup_menu');
 
 add_shortcode("vkit_app", "initVkit" );
@@ -70,24 +76,90 @@ function initVkit(){
   echo "<!DOCTYPE html>
     <meta charset='utf-8'>
 
-    <!-- Prerequisites:
-    <script src='//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js'></script>
+    <style type='text/css'>
 
-    <script src='//maxcdn.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js'></script>
-    <script src='//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.12.0/ui-bootstrap-tpls.js'></script>
-    <script src='//cdnjs.cloudflare.com/ajax/libs/masonry/3.3.1/masonry.pkgd.min.js'></script>
+    .row-New:before,
+    .row-New:after {
+      content: ' ';
+      display: table;
+    }
 
-    <link rel='stylesheet' href='//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css'>
+    .row-New:after {
+      clear: both;
+    }
 
-    -->
+    .row-New {
+      margin-right: -5px;
+      margin-left: -5px;
+    }
+
+    .col-md-5-New {
+      position: relative;
+      min-height: 1px;
+      padding-right: 5px;
+      padding-left: 5px;
+      width: 41%;
+      float:left;
+    }
+
+    .col-md-2-New {
+      position: relative;
+      min-height: 1px;
+      padding-right: 5px;
+      padding-left: 5px;
+      width: 16%;
+      float:left;
+    }
+
+    .btn-New {
+      display: inline-block;
+      padding: 6px 12px;
+      margin-bottom: 0;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.42857143;
+      text-align: center;
+      white-space: nowrap;
+      vertical-align: middle;
+      -ms-touch-action: manipulation;
+      touch-action: manipulation;
+      cursor: pointer;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      background-image: none;
+      border: 1px solid transparent;
+      border-radius: 4px;
+    }
+
+    .btn-info-New {
+      color: #fff;
+      background-color: #5bc0de;
+      border-color: #46b8da;
+    }
+
+    .btn-danger-New {
+      color: #fff;
+      background-color: #d9534f;
+      border-color: #d43f3a;
+    }
+
+    .btn-success-New {
+      color: #fff;
+      background-color: #5cb85c;
+      border-color: #4cae4c;
+    }
+
+    </style>
 
     <div>
 
         <h2 style='float:left; font-weight:bold; font-size:22px'>Welcome to the new VKit!</h2>
 
         <!-- Instructions on the right side -->
-        <div class='row' style='width:100%'>
-          <div class='col-md-5' style='float:right'>
+        <div class='row-New' style='width:100%'>
+          <div class='row-New' style='float:right'>
             <h4 style='float:right; text-decoration:underline; font-style:italic' onclick='expandCollapseInstructions()'> + Click For Instructions </h4>
             <div style='clear:both'></div>
           </div>
@@ -110,8 +182,8 @@ function initVkit(){
 
 
         <!-- Row: Labels -->
-        <div class='row' style='width:100%'>
-          <div class='col-md-5'>
+        <div class='row-New' style='width:100%'>
+          <div class='col-md-5-New'>
               <label>Filter Cards:</label>
               <div style='clear:both'></div>
               <input type='text' id='filterText' onkeypress='queueFilterChange()' onchange='filterChanged()' style='width:100%'>
@@ -121,26 +193,26 @@ function initVkit(){
 
 
         <!-- Row: Actual controls -->
-        <div class='row' style='height:100%; width:100%'>
-            <div class='col-md-5'>
+        <div class='row-New' style='height:100%; width:100%'>
+            <div class='col-md-5-New'>
                 <select multiple id='selectAdds' size=20 style='width:100%;'>
                   <!--<option ng-repeat='x in matchingCards' value='{{x}}'>{{x}}</option>-->
                 </select>
             </div>
 
             <!-- Middle Pane:  Add/Remove buttons -->
-            <div class='col-md-2'>
+            <div class='col-md-2-New'>
                 <div>
-                    <button class='btn btn-info btn-block' onclick='addSelectedCards(false)'>Add (BB)>></button>
+                    <button class='btn-New btn-info-New btn-block' onclick='addSelectedCards(false)'>Add (BB)>></button>
                     <div style='height:10px'></div>
-                    <button class='btn btn-info btn-block' onclick='addSelectedCards(true)'>Add (WB)>></button>
+                    <button class='btn-New btn-info-New btn-block' onclick='addSelectedCards(true)'>Add (WB)>></button>
                     <div style='height:10px'></div>
-                    <button class='btn btn-danger btn-block' onclick='removeSelectedCards()'> &lt;&lt; Remove</button>
+                    <button class='btn-New btn-danger-New btn-block' onclick='removeSelectedCards()'> &lt;&lt; Remove</button>
                 </div>
             </div>
 
             <!-- Right Pane:  Added Cards -->
-            <div class='col-md-5'>
+            <div class='col-md-5-New'>
                 <select multiple id='selectedRemoves' size=20 style='width:100%;height:100%'>
                   <!--<option ng-repeat='x in cardsForPdf track by $index' value='{{x}}'>{{x}}</option>-->
                 </select>
@@ -149,14 +221,14 @@ function initVkit(){
 
 
         <!-- Row: Bottom Buttons -->
-        <div class='row' style='width:100%'>
-          <div class='col-md-5'>
+        <div class='row-New' style='width:100%'>
+          <div class='col-md-5-New'>
           </div>
-          <div class='col-md-2'>
+          <div class='col-md-2-New'>
           </div>
-            <div class='col-md-5'>
+            <div class='col-md-5-New'>
                 <div style='width:100%;height:10px'></div>
-                <button class='btn btn-success' style='float:right' onclick='generatePdf()'>Generate PDF</button>
+                <button class='btn-New btn-success-New' style='float:right' onclick='generatePdf()'>Generate PDF</button>
             </div>
         </div>
 
