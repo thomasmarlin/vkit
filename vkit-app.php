@@ -1,4 +1,8 @@
 <?php
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
+/* ^^ Force pages to reload every time ^^ */
 /*
 Plugin Name: VkitApp
 Description: SWCCG VKit
@@ -6,10 +10,6 @@ Author: Tom Marlin
 Version: 1.0
 */
 
-/* Force pages to reload every time */
-header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
-header("Cache-Control: post-check=0, pre-check=0", false);
-header("Pragma: no-cache");
 
 //add_action('admin_menu', 'test_plugin_setup_menu');
 
@@ -38,10 +38,13 @@ function initVkit(){
   */
 
   //echo '<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.28/angular.js"></script>
+  /*
   echo '<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/jspdf/1.1.135/jspdf.min.js"></script>
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">';
+  */
 
+  echo '<script src="//cdnjs.cloudflare.com/ajax/libs/jspdf/1.1.135/jspdf.min.js"></script>';
   echo '<script src="' . plugins_url('/vkit-app/js/VkitMain.js') . '"></script>' . "\n";
   echo '<script src="' . plugins_url('/vkit-app/js/whiteBorderizer.js') . '"></script>' . "\n";
 
@@ -89,25 +92,23 @@ function initVkit(){
     }
 
     .row-New {
-      margin-right: -5px;
-      margin-left: -5px;
     }
 
     .col-md-5-New {
       position: relative;
       min-height: 1px;
-      padding-right: 5px;
-      padding-left: 5px;
-      width: 41%;
+      padding-left:5px;
+      padding-right:5px;
+      width: 39%;
       float:left;
     }
 
     .col-md-2-New {
       position: relative;
       min-height: 1px;
-      padding-right: 5px;
-      padding-left: 5px;
-      width: 16%;
+      padding-left:5px;
+      padding-right:5px;
+      width: 14%;
       float:left;
     }
 
@@ -194,7 +195,7 @@ function initVkit(){
 
         <!-- Row: Actual controls -->
         <div class='row-New' style='height:100%; width:100%'>
-            <div class='col-md-5-New'>
+            <div class='col-md-5-New' style='height:100%'>
                 <select multiple id='selectAdds' size=20 style='width:100%;'>
                   <!--<option ng-repeat='x in matchingCards' value='{{x}}'>{{x}}</option>-->
                 </select>
