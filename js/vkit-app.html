@@ -17,6 +17,63 @@
 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 
 -->
+<style type="text/css">
+.rowNew {
+  width:100%;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.col-md-5-New {
+  width: 41%;
+}
+
+.col-md-2-New {
+  width: 16%;
+}
+
+.btn-New {
+  display: inline-block;
+  padding: 6px 12px;
+  margin-bottom: 0;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.42857143;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  -ms-touch-action: manipulation;
+  touch-action: manipulation;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background-image: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+
+.btn-info-New {
+  color: #fff;
+  background-color: #5bc0de;
+  border-color: #46b8da;
+}
+
+.btn-danger-New {
+  color: #fff;
+  background-color: #d9534f;
+  border-color: #d43f3a;
+}
+
+.btn-success-New {
+  color: #fff;
+  background-color: #5cb85c;
+  border-color: #4cae4c;
+}
+
+</style>
+
 
 <div>
 
@@ -24,8 +81,8 @@
 
     <!-- Instructions on the right side -->
     <div class='row' style="width:100%">
-      <div class="col-md-5" style="float:right">
-        <h4 style="float:right; text-decoration:underline; font-style:italic" data-ng-click="expandCollapseInstructions()"> + Click For Instructions </h4>
+      <div class="col-md-5-New" style="float:right">
+        <h4 style="float:right; text-decoration:underline; font-style:italic" data-ng-click="expandCollapseInstructions()">Instructions </h4>
         <div style="clear:both"></div>
       </div>
     </div>
@@ -48,7 +105,7 @@
 
     <!-- Row: Labels -->
     <div class='row' style="width:100%">
-      <div class='col-md-5'>
+      <div class='col-md-5-New'>
           <label>Filter Cards:</label>
           <div style="clear:both"></div>
           <input type='text' ng-model="vkitModel.filterText" ng-change='filterChanged()' style="width:100%">
@@ -59,14 +116,14 @@
 
     <!-- Row: Actual controls -->
     <div class='row' style="height:100%; width:100%">
-        <div class='col-md-5'>
+        <div class='col-md-5-New'>
             <select multiple ng-multiple="true" ng-model="vkitModel.selectedAdds" data-ng-attr-size="20" size=20 style='width:100%;'>
               <option ng-repeat='x in matchingCards' value='{{x}}'>{{x}}</option>
             </select>
         </div>
 
         <!-- Middle Pane:  Add/Remove buttons -->
-        <div class='col-md-2'>
+        <div class='col-md-2-New'>
             <div>
                 <button class='btn btn-info btn-block' ng-click='addSelectedCards(false)'>Add (BB)>></button>
                 <div style="height:10px"></div>
@@ -77,7 +134,7 @@
         </div>
 
         <!-- Right Pane:  Added Cards -->
-        <div class='col-md-5'>
+        <div class='col-md-5-New'>
             <select multiple ng-multiple="true" ng-model="vkitModel.selectedRemoves" data-ng-attr-size="20" size=20 style='width:100%;height:100%'>
               <option ng-repeat='x in cardsForPdf track by $index' value='{{x}}'>{{x}}</option>
             </select>
@@ -85,14 +142,28 @@
     </div>
 
 
+    <!--Print Options (collapsble per above) -->
+    <div id="printOptionsObj" style="border:thin solid #DADADA;margin:20px; position:relative; display:none">
+        <div style="position:absolute; top: 10px; right: 10px;"  data-ng-click="expandCollapseInstructions()">[Hide]</div>
+        <div style="margin:20px">
+            <label>Horizontal Spacing</label>
+            <input id='inputHorizontalSpacing' type='text'>
+
+            <label>Vertical Spacing</label>
+            <input id='inputVerticalSpacing' type='text'>
+        </div>
+    </div>
+
+
     <!-- Row: Bottom Buttons -->
     <div class="row" style="width:100%">
-      <div class='col-md-5'>
+      <div class='col-md-5-New'>
       </div>
-      <div class='col-md-2'>
+      <div class='col-md-2-New'>
       </div>
-        <div class='col-md-5'>
+        <div class='col-md-5-New'>
             <div style="width:100%;height:10px"></div>
+            <div style="float:right; text-decoration:underline; font-style:italic" data-ng-click="expandCollapseSpacingOptions()">Spacing Options... </div>
             <button class="btn btn-success" style="float:right" ng-click="generatePdf()">Generate PDF</button>
         </div>
     </div>

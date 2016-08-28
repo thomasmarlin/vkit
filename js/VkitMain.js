@@ -7,12 +7,61 @@ var MAX_PAGE_RIGHT = 8.5 - MARGIN_TOP;
 
 var CARD_WIDTH = 2.5;
 
+var spacingOptions = {
+  horizontalSpacing: 0,
+  verticalSpacing: 0,
+  horizontalSpacingInches: 0,
+  verticalSpacingInches: 0
+};
 
 var matchingCards = [];
 var cardsForPdf = [];
 var printedCards = [];
 
+console.log("Vkit Verison 1.1a");
 
+function popuplateSpacingFields() {
+  document.getElementById("inputHorizontalSpacing").value = spacingOptions.horizontalSpacing;
+  document.getElementById("inputVerticalSpacing").value = spacingOptions.verticalSpacing;
+}
+
+function getNewSpacingOptions() {
+  // First, get the new spacing options (if they exist)
+  var horizontalSpacing = document.getElementById("inputHorizontalSpacing").value;
+  var verticalSpacing = document.getElementById("inputVerticalSpacing").value;
+
+  var parsedHorizontal = parseInt(horizontalSpacing);
+  var parsedVertical = parseInt(verticalSpacing);
+
+  if (isNaN(parsedHorizontal) || isNaN(parsedVertical)) {
+    alert("The spacing fields contains a invalid value. Please make sure to use whole numbers (0, 1, 2, etc)");
+    return false;
+  }
+
+  spacingOptions.horizontalSpacing = parsedHorizontal;
+  spacingOptions.verticalSpacing = parsedVertical;
+  spacingOptions.horizontalSpacingInches = parsedHorizontal / 200;
+  spacingOptions.verticalSpacingInches = parsedVertical / 200;
+
+  return true;
+}
+
+function showPrintProgress() {
+  jQuery('#printProgressObj').css('display', 'block');
+}
+
+function hidePrintProgress() {
+  jQuery('#printProgressObj').css('display', 'none');
+}
+
+function expandCollapseSpacingOptions() {
+  var displayMode = jQuery('#printOptionsObj').css('display');
+  if (displayMode == "none") {
+      jQuery('#printOptionsObj').css('display', 'block');
+  } else {
+      jQuery('#printOptionsObj').css('display', 'none');
+  }
+}
 
 function expandCollapseInstructions() {
     var displayMode = jQuery('#instructionsObj').css('display');
@@ -29,18 +78,19 @@ function getFilterText() {
 }
 
 function updateMatchingCards() {
+    var i = 0;
 
     var filterText = getFilterText();
     console.log("Filter Change!: " + filterText);
 
 
     matchingCards.length = 0;
-    for (var i = 0; i < allCardNames.length; i++){
+    for (i = 0; i < allCardNames.length; i++){
         var matches = false;
 
         var lowercaseFilterText = filterText.toLowerCase();
 
-        if ("" == lowercaseFilterText) {
+        if ("" === lowercaseFilterText) {
             matches = true;
         } else if (-1 != allCardNames[i].toLowerCase().indexOf(lowercaseFilterText)) {
             matches = true;
@@ -54,7 +104,7 @@ function updateMatchingCards() {
     jQuery('#selectAdds').find('option')
       .remove();
 
-    for (var i = 0; i < matchingCards.length; i++) {
+    for (i = 0; i < matchingCards.length; i++) {
         var match = matchingCards[i];
         console.log("Add card: " + match);
         jQuery('#selectAdds').append('<option value="' + match + '">' + match + '</option>');
@@ -74,7 +124,7 @@ function addSelectedCards(isWhiteBorder) {
 
   // Try to add the cards next to it's duplicates (if exist)
   jQuery("#selectAdds").find(":selected").each(function() {
-      var cardToAdd = jQuery(this).val()
+      var cardToAdd = jQuery(this).val();
 
       if (isWhiteBorder) {
           cardToAdd += " (WB)";
@@ -124,7 +174,7 @@ function convertImgToBase64(isWhiteBorder, url, callback)
 {
   var canvas = document.createElement('canvas');
   var ctx = canvas.getContext('2d');
-  img = document.createElement('img'),
+  img = document.createElement('img');
   img.src = url;
   img.onload = function() {
     canvas.height = img.height;
@@ -145,7 +195,7 @@ function convertImgToBase64(isWhiteBorder, url, callback)
   img.onerror = function() {
       console.log("Failed ot open image: " + url);
       callback(null);
-  }
+  };
 
 }
 
@@ -188,32 +238,36 @@ function printCards(doc, cardsToPrint, lastPrintPoint) {
           addedPageOrRow = true;
           nextTop = MARGIN_TOP;
           nextLeft = MARGIN_LEFT;
+          //setPrintPoint(lastPrintPoint, MARGIN_TOP, MARGIN_LEFT, MARGIN_TOP, MARGIN_LEFT);
       }
 
       // If this card will exceed the width, add a new row OR a new page if needed
       if ((nextLeft + CARD_WIDTH) > MAX_PAGE_RIGHT) {
           //console.log("Next right edge would have been off screen. Figuring out how to adapt!");
           nextTop = lastPrintPoint.bottom;
+          nextTop += spacingOptions.verticalSpacingInches;
 
           // Need to add a new row
           if ((nextTop + calculatedHeight) < MAX_PAGE_BOTTOM) {
               // Card will fit in the page in the next rows
               //console.log("Adding new row!");
               nextTop = lastPrintPoint.bottom;
+              nextTop += spacingOptions.verticalSpacingInches;
               nextLeft = MARGIN_LEFT;
               addedPageOrRow = true;
           } else {
               // Need a whole new page
               //console.log("Adding new page!");
-              doc.addPage()
+              doc.addPage();
               nextTop = MARGIN_TOP;
               nextLeft = MARGIN_LEFT;
+              addedPageOrRow = true;
           }
       } else {
           // Card will fit in this row on this page!  No adjustments needed.
       }
 
-      if (card.dataUrl != null){
+      if (card.dataUrl !== null){
           doc.addImage(card.dataUrl, 'jpeg', nextLeft, nextTop, CARD_WIDTH, calculatedHeight);
       }
 
@@ -224,7 +278,7 @@ function printCards(doc, cardsToPrint, lastPrintPoint) {
       }
       // Adjust the print-point based on the card we just added
       setPrintPoint(lastPrintPoint, nextTop, nextLeft,
-                                    bottomOfLastPrintedCard, nextLeft + CARD_WIDTH);
+                                    bottomOfLastPrintedCard, nextLeft + CARD_WIDTH + spacingOptions.horizontalSpacingInches);
 
   }
 
@@ -233,11 +287,25 @@ function printCards(doc, cardsToPrint, lastPrintPoint) {
 
 function generatePdf() {
 
+    if (!getNewSpacingOptions()) {
+      return;
+    }
+
+    showPrintProgress();
+
+    console.log("Spacing options are at: " + spacingOptions.horizontalSpacingInches  + " V: " + spacingOptions.verticalSpacingInches);
+
     var doc = new jsPDF('portrait', 'in', 'a4');
 
     var cardsWithSizes = [];
 
     function addNextCard(currentCardIndex) {
+
+        var progressElement = document.getElementById("progressText");
+        if (progressElement) {
+          progressElement.innerHTML = "Adding card: " + currentCardIndex + " of " + cardsForPdf.length;
+        }
+
         if (currentCardIndex == cardsForPdf.length) {
 
           var halfSlips = [];
@@ -252,11 +320,13 @@ function generatePdf() {
               top: MARGIN_TOP,
               right: MARGIN_LEFT,
               bottom: MARGIN_TOP
-          }
+          };
           printCards(doc, fullTemplates, lastPrintPoint);
           printCards(doc, halfSlips, lastPrintPoint);
 
           doc.output('save', 'vkitPdf.pdf');
+
+          hidePrintProgress();
 
         } else {
 
@@ -271,7 +341,7 @@ function generatePdf() {
                 cardPath: cardPath,
                 dataUrl: dataUrl,
                 aspectRatio: aspectRatio
-              })
+              });
 
               addNextCard(currentCardIndex+1);
           });
@@ -287,6 +357,8 @@ jQuery(document).ready(function(){
     console.log("After Loaded");
 
     console.log(JSON.stringify(allCardNames));
+
+    popuplateSpacingFields();
 
     updateMatchingCards();
 
