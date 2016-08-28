@@ -7,7 +7,7 @@ header("Pragma: no-cache");
 Plugin Name: VkitApp
 Description: SWCCG VKit
 Author: Tom Marlin
-Version: 1.0
+Version: 1.1
 */
 
 
