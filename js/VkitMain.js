@@ -5,7 +5,7 @@ var MARGIN_TOP = 0.35;
 var MAX_PAGE_BOTTOM = 11.0 - MARGIN_LEFT;
 var MAX_PAGE_RIGHT = 8.5 - MARGIN_TOP;
 
-var CARD_WIDTH = 2.5;
+var CARD_WIDTH = 2.49;
 
 var spacingOptions = {
   horizontalSpacing: 0,
@@ -295,7 +295,7 @@ function generatePdf() {
 
     console.log("Spacing options are at: " + spacingOptions.horizontalSpacingInches  + " V: " + spacingOptions.verticalSpacingInches);
 
-    var doc = new jsPDF('portrait', 'in', 'a4');
+    var doc = new jsPDF('portrait', 'in', [11, 8.5]);
 
     var cardsWithSizes = [];
 
