@@ -52,6 +52,24 @@ function initVkit(){
 
     <style type='text/css'>
 
+    .fl-post-header {
+      display: none;
+    }
+
+    .vkit-app {
+      color: black;
+    }
+
+    .vkit-app ::selection {
+      color: white;
+    }
+
+    .vkit-app h1,
+    .vkit-app h2,
+    .vkit-app h3 {
+      color: black;
+    }
+
     .row-New:before,
     .row-New:after {
       content: ' ';
@@ -77,6 +95,8 @@ function initVkit(){
       min-height: 1px;
       width: 100%;
       float:left;
+      padding-left: 1.4em;
+      padding-right: 1.4em;
     }
 
     .col-md-2-New {
@@ -84,6 +104,7 @@ function initVkit(){
       min-height: 1px;
       width: 16%;
       float:left;
+      text-align: center;
     }
 
     .btn-New {
@@ -108,16 +129,18 @@ function initVkit(){
       border-radius: 4px;
     }
 
+    .btn-add-remove {
+      width: 85%;
+    }
+
     .btn-info-New {
       color: #fff;
       background-color: #5bc0de;
       border-color: #46b8da;
     }
 
-    .btn-danger-New {
-      color: #fff;
-      background-color: #d9534f;
-      border-color: #d43f3a;
+    .btn-info-New:hover {
+      background-color: #5bc0de !important;
     }
 
     .btn-success-New {
@@ -128,14 +151,14 @@ function initVkit(){
 
     </style>
 
-    <div>
+    <div class='vkit-app'>
 
-        <h2 style='float:left; font-weight:bold; font-size:22px'>Welcome to the new VKit!</h2>
+        <h2 style='float:left; font-weight:bold; font-size:22px; margin-top: 0px; text-transform: none !important;'>Vkit: Print only the cards you need</h2>
 
         <!-- Instructions and Spacing Options on the right side -->
         <div class='row-New' style='width:100%'>
           <div class='row-New' style='float:right; font-size: 1.2em; font-weight: bold'>
-            <div style='margin-left: 10px; float:right; text-decoration:underline; font-style:italic; cursor: pointer' onclick='expandCollapseInstructions()'>+ Click For Instructions... </div>
+            <div style='margin-left: 10px; float:right; text-decoration:underline; font-style:italic; cursor: pointer; color: rgb(255, 167, 74); font-weight: 300;font-size: 0.9em;' onclick='expandCollapseInstructions()'>+ Click For Instructions... </div>
             <div style='clear:both'></div>
           </div>
         </div>
@@ -178,11 +201,11 @@ function initVkit(){
             <!-- Middle Pane:  Add/Remove buttons -->
             <div class='col-md-2-New'>
                 <div>
-                    <button class='btn-New btn-info-New btn-block' onclick='addSelectedCards(false)'>Add (BB)>></button>
+                    <button class='btn-New btn-info-New btn-block btn-add-remove' onclick='addSelectedCards(false)'>Add (BB) &gt; </button>
                     <div style='height:10px'></div>
-                    <button class='btn-New btn-info-New btn-block' onclick='addSelectedCards(true)'>Add (WB)>></button>
+                    <button class='btn-New btn-info-New btn-block btn-add-remove' onclick='addSelectedCards(true)'>Add (WB) &gt; </button>
                     <div style='height:10px'></div>
-                    <button class='btn-New btn-danger-New btn-block' onclick='removeSelectedCards()'> &lt;&lt; Remove</button>
+                    <button class='btn-New btn-info-New btn-block btn-add-remove' onclick='removeSelectedCards()'> &lt; Remove</button>
                 </div>
                 <!--<select multiple id='selectAdds' size=20 style='width:1px; visibility:hidden'></select>-->
 
